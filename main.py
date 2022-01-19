@@ -80,4 +80,4 @@ api = tw.API(auth, wait_on_rate_limit=True)
 companies = readNames('intro2ml_2021_final_project\\food_brands.txt')
 downloadTweets(api, companies, file_name='intro2ml_2021_final_project\\all_tweets_moreUsers_1e5.pkl', min_number_of_followers=1e5)
 
-X = pd.read_pickle('intro2ml_2021_final_project\\all_tweets_moreUsers_1e5.pkl')
+df = pd.read_pickle('intro2ml_2021_final_project\\all_tweets_moreUsers_1e5.pkl')

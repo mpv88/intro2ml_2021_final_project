@@ -26,3 +26,6 @@ There is no data available for this problem: the student is hence required to ob
 
 Sources:
 http://belindazeng.github.io/goingviral/
+https://towardsdatascience.com/using-data-science-to-predict-viral-tweets-615b0acc2e1e
+https://towardsdatascience.com/extracting-data-from-twitter-using-python-5ab67bff553a
+https://www.sciencedirect.com/science/article/abs/pii/S0957417420306096

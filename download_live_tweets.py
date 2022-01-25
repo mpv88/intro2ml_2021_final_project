@@ -33,7 +33,7 @@ def try_get(status, attribute):
         return None
 
 # open & write .csv file
-csvFile = open('smallsample.csv', 'a')
+csvFile = open('intro2ml_2021_final_project\\Data\\smallsample.csv', 'a')
 csvWriter = csv.writer(csvFile)
     
 class MyListener(tw.Stream):

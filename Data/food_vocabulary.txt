@@ -1,5 +1,6 @@
 acorn squash
 agave juice
+albacore
 ale
 alfalfa
 amaro
@@ -81,6 +82,7 @@ burgers
 burrito
 butter
 cabbage
+cacao
 cake
 calvados
 calzone
@@ -102,6 +104,7 @@ cereal
 cereal bars
 champagne
 chard
+cheddar
 cheese
 cheesecake
 cherries
@@ -117,6 +120,7 @@ chocolate
 chop
 chops
 chub
+chupa chups
 churro
 cider
 cinamon
@@ -206,11 +210,13 @@ fajitas
 fava bean
 fennel
 fig
+finger food
 fish
 fish fingers
 flan
 flounder
 flying fish
+food
 francesinha
 free range eggs
 freezer
@@ -323,6 +329,7 @@ liver
 loach
 loaf
 lobster
+lollipop
 loquat
 lychee
 macaroni
@@ -340,6 +347,7 @@ margherita
 marionberry
 marlin
 marmalade
+marmelade
 marsala
 marshmallow
 martini
@@ -446,6 +454,7 @@ pomegranite
 pomelo
 pompano
 popcicle
+popcorn
 popover
 porgy
 pork

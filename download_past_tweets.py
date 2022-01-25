@@ -1,6 +1,18 @@
+#https://towardsai.net/p/nlp/methods-challenges-and-hazards-of-collecting-tweets-9e3e7805095a
+
 import tweepy as tw
 import pandas as pd
 import pickle
+
+
+
+tweets = tw.Cursor(api.search,
+              q="#vaccine",
+              tweet_mode='extended',
+              lang="en",
+              since="2020-12-25",
+              until="2020-12-28").items(100)
+
 
 def downloadTweets(api, users, file_name = 'all_tweets.pkl', min_number_of_followers=1e6):
     ''' downloads number 'count' tweets from users listed in 'users' 

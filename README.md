@@ -1,5 +1,5 @@
 # i2ml_2021_final_project
-twiiter related prediction problems
+twitter related prediction problems
 
 Deliver a single document (as a pdf file, written in English or Italian), within the exam date, by email, to the teacher. The document maximum length is fixed at 4 pages (excluding references), if the document is drafted according to this LaTex template, or 1200 words (including every word: title, authors, references, …), otherwise.
 https://www.overleaf.com/project/61df5902f8b32afb02235e6e

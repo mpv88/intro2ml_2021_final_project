@@ -119,10 +119,10 @@ def read_txt(txt_file):
 
 if __name__ == "__main__":
     
-    consumer_key = '3XLVvCdmXhpjZYi5pOverZgPL'
-    consumer_secret = 'TPVT9NSnQbQbje0yUP1J0wpX0rZHbkBAmx1dhNnBMTSUk4rZZh'
-    access_token = '1248331519204249600-ZE16yRQr6xjKt6JLXwgzr2YavcI0ZL'
-    access_token_secret = 'JvMHU8aqokwJC0VUOegGTkIhUjY2YQywcsUJOLUOiTuiZ'
+    consumer_key = '???'
+    consumer_secret = '???'
+    access_token = '???'
+    access_token_secret = '???'
     auth = tw.OAuthHandler(consumer_key, consumer_secret)
     twitter_stream = MyListener(consumer_key, consumer_secret, access_token, access_token_secret)
     

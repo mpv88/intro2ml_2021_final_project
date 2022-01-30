@@ -21,9 +21,9 @@ def read_txt(txt_file):
 c = twint.Config()
 
 # search parameters https://github.com/twintproject/twint/wiki/Configuration
-c.Limit = 5000 # max n° of tweets
+c.Limit = 200 # max n° of tweets
 c.Since = '2006-03-21' # first tweet ever
-c.Until =  '2022-01-25'
+c.Until =  '2020-01-01'
 #c.Min_retweets = 1e3 # min n° of retweets
 #c.Min_likes = 1e5
 #c.Min_replies = 1e4

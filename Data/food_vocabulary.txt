@@ -366,7 +366,6 @@ pattypan squash
 peaches
 peanut brittle
 peanut butter
-peanuts
 pears
 peas
 pecan
@@ -416,7 +415,6 @@ raisin
 ramen
 raspberries
 red apples
-red velvet
 red wine
 redcurrant
 rhubarb

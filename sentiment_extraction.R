@@ -66,7 +66,7 @@ for (row in 1:nrow(dataset)) {
 
 
 # OUTPUT ------------------------------------------------------------------
-utils::write.csv(output, file = "sentiment.csv")
+utils::write.csv(output, file = "sentiment.csv", row.names = FALSE)
 
 # plot a word cloud 
 wordcloud::wordcloud(dictCorpus,

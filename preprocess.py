@@ -40,6 +40,6 @@ if __name__ == "__main__":
     filtered_tweets = filter_duplicate_tw(filtered_tweets)
     
     # dump processed file 
-    filtered_tweets.to_csv('intro2ml_2021_final_project\\Data\\all_tweets_filtered.csv')
+    filtered_tweets.to_csv('intro2ml_2021_final_project\\Data\\all_tweets_filtered.csv', index = False)
     filtered_tweets.shape
     filtered_tweets.head(10)    

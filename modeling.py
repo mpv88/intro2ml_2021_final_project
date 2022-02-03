@@ -11,6 +11,9 @@ from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, StandardScaler
 tweets_df = pd.read_csv('intro2ml_2021_final_project\\Data\\2k_sample_processed.csv', encoding = 'utf-8')
 tweets_df.head()
 
+X = data[['sepal length', 'sepal width', 'petal length', 'petal width']]  # Features
+y = data['species']  # Labels
+
 
 # encode categorical/dummy variables
 oht_enc = OneHotEncoder()
@@ -29,8 +32,6 @@ normed_train_data = pd.DataFrame(sc.fit_transform(training), columns = X.columns
 
 
 
-X=data[['sepal length', 'sepal width', 'petal length', 'petal width']]  # Features
-y=data['species']  # Labels
 
 
 # c) split dataset into training set and test set

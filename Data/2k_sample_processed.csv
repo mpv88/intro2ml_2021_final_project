@@ -1,4 +1,4 @@
-weekday,hour,tweet_length,mentions_count,urls_count,photos_count,hashtags_count,quote_url,video,retweets_count,anger,anticipation,disgust,fear,joy,sadness,surprise,trust,negative,positive
+weekday,hour,tweet_length,mentions_count,urls_count,photos_count,hashtags_count,quote_url,video,viral,anger,anticipation,disgust,fear,joy,sadness,surprise,trust,negative,positive
 Monday,23,85,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0
 Monday,22,160,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 Monday,21,126,0,0,0,0,0,0,0,0,2,0,0,3,0,2,2,0,3

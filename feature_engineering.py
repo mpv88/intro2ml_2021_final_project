@@ -4,7 +4,7 @@ import pandas as pd
 def y_to_binary(df, col, threshold):
     df.loc[df[col] < threshold, col] = 0
     df.loc[df[col] >= threshold, col] = 1
-    return df
+    df.rename(columns={col: f'viral'}, inplace = True)
 
 def X_to_drop(df, col):
     return df.drop([col], axis = 1, inplace = True)
@@ -71,7 +71,8 @@ if __name__ == "__main__":
     # tranforms dtypes of categorical/dummy variables
     X_to_categorical(tweets_df, 'quote_url')
     X_to_categorical(tweets_df, 'video')
-    
+    X_to_categorical(tweets_df, 'viral')
+        
     # dump processed file 
     tweets_df.to_csv('intro2ml_2021_final_project\\Data\\2k_sample_processed.csv', encoding = 'utf-8', index = False)
     print(tweets_df.dtypes)    

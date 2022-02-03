@@ -4,10 +4,28 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, StandardScaler
+
 
 # a) load dataset
 tweets_df = pd.read_csv('intro2ml_2021_final_project\\Data\\2k_sample_processed.csv', encoding = 'utf-8')
 tweets_df.head()
+
+
+# encode categorical/dummy variables
+oht_enc = OneHotEncoder()
+tweets_df['weekday'] = ord_enc.fit_transform(tweets_df['weekday'])
+tweets_df['hour'] = ord_enc.fit_transform(tweets_df['hour'])
+tweets_df['video'] = ord_enc.fit_transform(tweets_df['video'])
+tweets_df['quote_url'] = ord_enc.fit_transform(tweets_df['quote_url'])
+
+# standardize numerical variables
+sc = StandardScaler()
+normed_train_data = pd.DataFrame(sc.fit_transform(training), columns = X.columns)
+
+
+
+
 
 
 

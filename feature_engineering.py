@@ -1,5 +1,5 @@
+from ast import literal_eval
 import pandas as pd
-from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, StandardScaler
 
 def y_to_binary(df, col, threshold):
     df.loc[df[col] < threshold, col] = 0
@@ -8,6 +8,10 @@ def y_to_binary(df, col, threshold):
 
 def X_to_drop(df, col):
     return df.drop([col], axis = 1, inplace = True)
+
+def X_to_dummy(df, col):
+    df[col] = df[col].fillna(0)
+    df.loc[df[col] != 0, col] = 1
     
 def X_to_length(df, col):
     df[col] = df[col].astype(str).str.len()
@@ -20,11 +24,13 @@ def X_to_weekday(df, col):
 def X_to_hour(df, col):
     df[col] = pd.to_datetime(df[col]).dt.hour.astype('category')
     df.rename(columns={col: f'hour'}, inplace = True)
-    
+
 def X_to_count_list(df, col):
-    df[col] =  df[col].str.len()
+    df[col] = df[col].apply(literal_eval).apply(len)
     df.rename(columns={col: f'{col}_count'}, inplace = True)
-#FIXME
+    
+def X_to_categorical(df, col):
+    df[col] = df[col].astype('category')
 
 if __name__ == "__main__":
     
@@ -44,6 +50,9 @@ if __name__ == "__main__":
     X_to_drop(tweets_df, 'language')
     X_to_drop(tweets_df, 'retweet')
     
+    # turn NaN to zeros
+    X_to_dummy(tweets_df, 'quote_url')
+    
     # transforms variable to length
     X_to_length(tweets_df, 'tweet')
     
@@ -58,18 +67,11 @@ if __name__ == "__main__":
     X_to_count_list(tweets_df, 'urls')
     X_to_count_list(tweets_df, 'photos')
     X_to_count_list(tweets_df, 'hashtags')
-    '''
-    # encode categorical/dummy variables
-    oht_enc = OneHotEncoder()
-    tweets_df['weekday'] = ord_enc.fit_transform(tweets_df['weekday'])
-    tweets_df['hour'] = ord_enc.fit_transform(tweets_df['hour'])
-    tweets_df['video'] = ord_enc.fit_transform(tweets_df['video'])
-    tweets_df['quote_url'] = ord_enc.fit_transform(tweets_df['quote_url'])
+
+    # tranforms dtypes of categorical/dummy variables
+    X_to_categorical(tweets_df, 'quote_url')
+    X_to_categorical(tweets_df, 'video')
     
-    # standardize numerical variables
-    sc = StandardScaler()
-    normed_train_data = pd.DataFrame(sc.fit_transform(training), columns = X.columns)
-    '''
     # dump processed file 
     tweets_df.to_csv('intro2ml_2021_final_project\\Data\\2k_sample_processed.csv', encoding = 'utf-8', index = False)
-    print(tweets_df.head(10))    
+    print(tweets_df.dtypes)    

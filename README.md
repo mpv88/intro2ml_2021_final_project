@@ -29,3 +29,12 @@ http://belindazeng.github.io/goingviral/
 https://towardsdatascience.com/using-data-science-to-predict-viral-tweets-615b0acc2e1e
 https://towardsdatascience.com/extracting-data-from-twitter-using-python-5ab67bff553a
 https://www.sciencedirect.com/science/article/abs/pii/S0957417420306096
+
+#TODO:
+a) plot variable importance
+b) encode predictors (categorical/numerical) https://towardsdatascience.com/a-practical-guide-to-implementing-a-random-forest-classifier-in-python-979988d8a263
+c) grid search for RF hyperparams https://towardsdatascience.com/a-practical-guide-to-implementing-a-random-forest-classifier-in-python-979988d8a263
+d) plot OBB vs n_estimators  https://scikit-learn.org/stable/auto_examples/ensemble/plot_ensemble_oob.html#sphx-glr-auto-examples-ensemble-plot-ensemble-oob-py
+e) plot ROC for all classifiers https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_roc_curve_visualization_api.html#sphx-glr-auto-examples-miscellaneous-plot-roc-curve-visualization-api-py
+f) check SVM & k-near
+g) use confusion matrix for evaluation + f1 score after defining baselines

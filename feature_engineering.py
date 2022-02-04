@@ -34,8 +34,8 @@ def X_to_categorical(df, col):
 
 if __name__ == "__main__":
     
-    tweet_df = pd.read_csv('intro2ml_2021_final_project\\Data\\dataset_2k.csv', encoding = 'utf-8')
-    sent_df = pd.read_csv('intro2ml_2021_final_project\\Data\\sentiment_by_sentence.csv', encoding = 'utf-8')
+    tweet_df = pd.read_csv(r'C:\Users\loren\Documents\GitHub\intro2ml_2021_final_project\Data\dataset_full.csv', encoding = 'utf-8')
+    sent_df = pd.read_csv(r'C:\Users\loren\Documents\GitHub\intro2ml_2021_final_project\Data\sentiment_full.csv', encoding = 'utf-8')
     
     # join 2 datasets
     tweets_df = pd.concat([tweet_df, sent_df], axis=1)
@@ -74,5 +74,5 @@ if __name__ == "__main__":
     X_to_categorical(tweets_df, 'viral')
         
     # dump processed file 
-    tweets_df.to_csv('intro2ml_2021_final_project\\Data\\2k_sample_processed.csv', encoding = 'utf-8', index = False)
+    tweets_df.to_csv(r'C:\Users\loren\Documents\GitHub\intro2ml_2021_final_project\Data\full_sample_processed.csv', encoding = 'utf-8', index = False)
     print(tweets_df.dtypes)    

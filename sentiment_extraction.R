@@ -2,7 +2,7 @@
 # https://medium.com/swlh/exploring-sentiment-analysis-a6b53b026131
 # https://cran.r-project.org/web/packages/syuzhet/vignettes/syuzhet-vignette.html
 
-setwd("C:/Users/m/Documents/Python/PythonScripts/intro2ml_2021_final_project/Data")
+setwd("C:/Users/loren/Documents/GitHub/intro2ml_2021_final_project/Data")
 
 # LIBRARIES ---------------------------------------------------------------
 
@@ -13,7 +13,7 @@ library(wordcloud)
 library(SnowballC)
 
 # IMPORT RAW DATA ---------------------------------------------------------
-dataset <- utils::read.csv("dataset_2k.csv", header = TRUE, sep = ",")
+dataset <- utils::read.csv("dataset_full.csv", header = TRUE, sep = ",")
 
 # TEXT MINING -------------------------------------------------------
 # myStopwords <- c(generics::setdiff(tm::stopwords('english'), c("r", "big")),"use")
@@ -68,7 +68,7 @@ for (row in 1:nrow(dataset)) {
 
 
 # OUTPUT ------------------------------------------------------------------
-utils::write.csv(output, file = "sentiment.csv", row.names = FALSE)
+utils::write.csv(output, file = "sentiment_full.csv", row.names = FALSE)
 
 # plot a word cloud 
 wordcloud::wordcloud(dictCorpus,

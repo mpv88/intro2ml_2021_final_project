@@ -2,7 +2,7 @@
 # https://medium.com/swlh/exploring-sentiment-analysis-a6b53b026131
 # https://cran.r-project.org/web/packages/syuzhet/vignettes/syuzhet-vignette.html
 
-setwd("C:/Users/loren/Documents/Github/intro2ml_2021_final_project/Data")
+setwd("C:/Users/m/Documents/Python/PythonScripts/intro2ml_2021_final_project/Data")
 
 # LIBRARIES ---------------------------------------------------------------
 
@@ -18,28 +18,30 @@ dataset <- utils::read.csv("dataset_2k.csv", header = TRUE, sep = ",")
 # TEXT MINING -------------------------------------------------------
 # myStopwords <- c(generics::setdiff(tm::stopwords('english'), c("r", "big")),"use")
 
-dictCorpus <- dataset$tweet %>%
-              tm::VectorSource() %>% 
-              tm::Corpus() %>% 
-              tm::tm_map(tm::content_transformer(tolower)) %>% # to lower case
-              tm::tm_map(tm::content_transformer(gsub), #remove emojis
-                         pattern = "\\W", replace = " ") %>% 
-              tm::tm_map(tm::content_transformer( # remove URLs
-                         function(x) gsub("http[^[:space:]]*", "", x))) %>% 
-              tm::tm_map(tm::content_transformer( # remove anything other Eng letters/spaces
-                         function(x) gsub("[^[:alpha:][:space:]]*", "", x))) %>% 
-              tm::tm_map(tm::removeWords, tm::stopwords("english")) %>% # remove stopwords
-              #tm::tm_map(tm::removeWords, myStopwords) %>% # remove custom stop words
-              tm::tm_map(tm::stripWhitespace) %>% # remove extra spaces
-              tm::tm_map(tm::removeNumbers) %>% # remove numbers
-              tm::tm_map(tm::removePunctuation) # remove punctuation
+# dictCorpus <- dataset$tweet %>%
+#               tm::VectorSource() %>% 
+#               tm::Corpus() %>% 
+#               tm::tm_map(tm::content_transformer(tolower)) %>% # to lower case
+#               tm::tm_map(tm::content_transformer(gsub), #remove emojis
+#                          pattern = "\\W", replace = " ") %>% 
+#               tm::tm_map(tm::content_transformer( # remove URLs
+#                          function(x) gsub("http[^[:space:]]*", "", x))) %>% 
+#               tm::tm_map(tm::content_transformer( # remove anything other Eng letters/spaces
+#                          function(x) gsub("[^[:alpha:][:space:]]*", "", x))) %>% 
+#               tm::tm_map(tm::removeWords, tm::stopwords("english")) %>% # remove stopwords
+#               #tm::tm_map(tm::removeWords, myStopwords) %>% # remove custom stop words
+#               tm::tm_map(tm::stripWhitespace) %>% # remove extra spaces
+#               tm::tm_map(tm::removeNumbers) %>% # remove numbers
+#               tm::tm_map(tm::removePunctuation) # remove punctuation
+# 
+# myCorpus <- dictCorpus %>% # stemming
+#             tm::tm_map(tm::stemDocument) %>%
+#             tm::tm_map(tm::stemCompletion, dictionary = dictCorpus) %>% 
+#             utils::stack() %>% tibble::as_tibble() %>% dplyr::select(-values)
 
-myCorpus <- dictCorpus %>% # stemming
-            tm::tm_map(tm::stemDocument) %>%
-            tm::tm_map(tm::stemCompletion, dictionary = dictCorpus) %>% 
-            utils::stack() %>% tibble::as_tibble() %>% dplyr::select(-values)
+#dataset <- dataset %>% dplyr::mutate(tweet = as.character(myCorpus$ind))
+dataset <- dataset %>% dplyr::mutate(tweet = as.character(tweet))
 
-dataset <- dataset %>% dplyr::mutate(tweet = as.character(myCorpus$ind))
 
 # SENTIMENT EXTRACTION -----------------------------------------------------------
 output <- data.frame(anger = numeric(),
@@ -55,8 +57,8 @@ output <- data.frame(anger = numeric(),
 
 for (row in 1:nrow(dataset)) {
   df <- dataset[row, "tweet"] %>% 
-        #syuzhet::get_sentences() %>% # sentiment by sentence
-        syuzhet::get_tokens(pattern = "\\W") %>% # sentiment by word
+        syuzhet::get_sentences() %>% # sentiment by sentence
+        #syuzhet::get_tokens(pattern = "\\W") %>% # sentiment by word
         syuzhet::get_nrc_sentiment(lang = "english", lowercase = TRUE) %>%
         colSums() %>% 
         t() %>% 

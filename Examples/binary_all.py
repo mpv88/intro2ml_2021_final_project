@@ -105,9 +105,9 @@ for key in models.keys():
     predictions = models[key].predict(X_test)
     
     # Calculate Accuracy, Precision and Recall Metrics
-    accuracy[key] = accuracy_score(predictions, y_test)
-    precision[key] = precision_score(predictions, y_test)
-    recall[key] = recall_score(predictions, y_test)
+    accuracy[key] = accuracy_score(y_test, predictions)
+    precision[key] = precision_score(y_test, predictions)
+    recall[key] = recall_score(y_test, predictions)
 
 # table of results
 df_model = pd.DataFrame(index=models.keys(), columns=['Accuracy', 'Precision', 'Recall'])

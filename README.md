@@ -34,7 +34,7 @@ https://www.sciencedirect.com/science/article/abs/pii/S0957417420306096
 a) plot OBB vs n_estimators/accuracy vs n_estimators 
 https://scikit-learn.org/stable/auto_examples/ensemble/plot_ensemble_oob.html#sphx-glr-auto-examples-ensemble-plot-ensemble-oob-py
 https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_stats.html
-b) comparison with SVM & k-near
+b) SVM CVgrid
 https://datascience.stackexchange.com/questions/86049/how-plot-gridsearch-results
 
 https://datascience.stackexchange.com/questions/64441/how-to-interpret-classification-report-of-scikit-learn

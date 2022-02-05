@@ -86,9 +86,9 @@ print(metrics.classification_report(y_test, y_pred))
 print(RF_model.score(X_train, y_train))
 print(RF_model.score(X_test, y_test))
 
-# OBB error
-#oob_error = 1 - RF.oob_score_
-#print('The OOB error is: ', oob_error)
+# OOB error
+# oob_error = 1 - RF.oob_score_
+# print('The OOB error is: ', oob_error)
 
 # print ROC
 rfc_disp = metrics.RocCurveDisplay.from_estimator(RF_model, X_test, y_test, alpha=0.8)

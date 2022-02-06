@@ -38,3 +38,8 @@ b) SVM CVgrid
 https://datascience.stackexchange.com/questions/86049/how-plot-gridsearch-results
 
 https://datascience.stackexchange.com/questions/64441/how-to-interpret-classification-report-of-scikit-learn
+for ROC the auc of the random model is 0.5.
+for PR curve the auc of the random model is n_positive/(n_positive+n_negative).
+Area under ROC curve is very useful metric to validate classification model because it is threshold and scale invariant while accuracy depends on the chosen threshold value and is scale variant
+https://medium.com/nerd-for-tech/accuracy-vs-auc-roc-a8e7a384d153
+Accuracy+AUCROC & F1+AUCPR

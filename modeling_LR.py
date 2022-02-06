@@ -124,7 +124,7 @@ random_grid = {'n_estimators': n_estimators,
                'min_samples_split': min_samples_split,
                'min_samples_leaf': min_samples_leaf,
                'max_features': max_features,
-               'bootstrap': bootstrap
+               'bootstrap': bootstrap,
                }
 
 RF_random = RandomizedSearchCV(estimator = RF,
@@ -147,7 +147,6 @@ y_pred_random = RF_random_model.predict(X_test)
 
 # check which are the chosen params 
 print(RF_random.best_params_)
-print(RF_random.best_estimator_)
 
 # evaluate updated metrics
 print(RF_random_model.score(X_train, y_train))
@@ -197,7 +196,6 @@ y_pred_search = RF_search_model.predict(X_test)
 
 # check which are the chosen params 
 print(RF_search.best_params_)
-print(RF_search.best_estimator_)
 
 # evaluate updated metrics
 print(RF_search_model.score(X_train, y_train))
@@ -211,4 +209,4 @@ print(RF_search_model.score(X_test, y_test))
 
 # to file
 pickle.dump(model_output, open('intro2ml_2021_final_project\\Data\\rf_full.pkl', 'wb'))
-#model_2 = pickle.load(open('intro2ml_2021_final_project\\Data\\rf_full.pkl', 'rb'))
+#model_2 = pickle.load(open('intro2ml_2021_final_project\\Data\\rf.pkl', 'rb'))

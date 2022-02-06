@@ -1,7 +1,7 @@
 from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV, RandomizedSearchCV
 from sklearn.compose import ColumnTransformer, make_column_selector
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
 from sklearn.pipeline import make_pipeline
 from sklearn import metrics
 import matplotlib.pyplot as plt
@@ -45,33 +45,29 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, rando
 
 
 # D) define and fit/predict models
-#TODO: avanti!
-RF = RandomForestClassifier(n_estimators = 100,
-                            criterion = 'gini',
-                            max_depth = None,
-                            min_samples_split = 2,
-                            min_samples_leaf = 1,
-                            min_weight_fraction_leaf = 0.0,
-                            max_features = 'auto',
-                            max_leaf_nodes = None,
-                            min_impurity_decrease = 0.0,
-                            bootstrap = True, 
-                            oob_score = False, # default = False
-                            n_jobs = None,
-                            random_state = None,
-                            verbose = 0,
-                            warm_start = False,
-                            class_weight = None,
-                            ccp_alpha = 0.0,
-                            max_samples = None)
+SVM = SVC(C = 1.0, # regularization parameter
+          kernel = 'rbf', # {'linear', 'poly', 'rbf', 'sigmoid', 'precomputed'}
+          degree = 3, # polynomial degree (poly only, ignored by others)
+          gamma = 'scale', # kernel coefficient (rbf, poly, sigmoid only)
+          coef0 = 0.0, # independent term of kernel (poly, sigmoid only)
+          shrinking = True,
+          probability = False,
+          tol = 1e-3,
+          cache_size = 200,
+          class_weight = None, # None = all classes have weight one
+          verbose = False,
+          max_iter = -1, # -1 = no limit
+          decision_function_shape = 'ovr', # ignored for binary classification
+          break_ties = False,
+          random_state = None)  # ignored when probability=False
 
-RF_model = make_pipeline(preprocessor, RF)
-model_output = RF_model.fit(X_train, y_train)
-y_pred = RF_model.predict(X_test)
+SVM_model = make_pipeline(preprocessor, SVM)
+model_output = SVM_model.fit(X_train, y_train)
+y_pred = SVM_model.predict(X_test)
 
 
 # E) cross validation
-cv_results = cross_validate(RF_model, X, y, cv = 5)
+cv_results = cross_validate(SVM_model, X, y, cv = 5)
 scores = cv_results['test_score']
 print(cv_results)
 print('The mean cross-validation accuracy is: 'f'{scores.mean():.3f} +/- {scores.std():.3f}')
@@ -84,51 +80,41 @@ print("Precision:", metrics.precision_score(y_test, y_pred))
 print("Recall:", metrics.recall_score(y_test, y_pred))
 print("F1 score:", metrics.f1_score(y_test, y_pred))
 print(metrics.classification_report(y_test, y_pred))
-print(RF_model.score(X_train, y_train))
-print(RF_model.score(X_test, y_test))
-
-# OOB error
-# oob_error = 1 - RF.oob_score_
-# print('The OOB error is: ', oob_error)
+print(SVM_model.score(X_train, y_train))
+print(SVM_model.score(X_test, y_test))
 
 # print ROC
-rfc_disp = metrics.RocCurveDisplay.from_estimator(RF_model, X_test, y_test, alpha=0.8)
+rfc_disp = metrics.RocCurveDisplay.from_estimator(SVM_model, X_test, y_test, alpha=0.8)
 plt.show()
 
 
-# G) evaluate variable importance & plot
-labels = [s.replace('one-hot-encoder__','').replace('standard-scaler__','') for s in RF_model[:-1].get_feature_names_out()] # RF_model[1].feature_names_in_
-feature_importance = pd.Series(RF.feature_importances_, index = labels).sort_values(ascending = False)
+# G) evaluate variable importance & plot JUST FOR LINEAR KERNEL 
+# (see https://stackoverflow.com/questions/41592661/determining-the-most-contributing-features-for-svm-classifier-in-sklearn) & sklearn.inspection.permutation_importance
+'''
+labels = [s.replace('one-hot-encoder__','').replace('standard-scaler__','') for s in SVM_model[:-1].get_feature_names_out()]
+feature_importance = pd.Series(np.transpose(abs(SVM.coef_).tolist()[0]), index=labels).sort_values(ascending = False)
 print(feature_importance)
 
 # plot
 sns.barplot(x = feature_importance, y = feature_importance.index)
-plt.xlabel('Feature Importance Score')
+plt.xlabel('Most constributing features by coefficient')
 plt.ylabel('Features')
-plt.title('Visualizing Important Features')
+plt.title('SVM: Importance of Features')
 plt.legend()
 plt.show()
+'''
 
+# H) main SVM parameters' tuning via random grid search
+C = [0.1, 1, 10, 100, 1000]
+gamma = [1, 0.1, 0.01, 0.001, 0.0001]
+kernel = ['linear', 'poly', 'rbf', 'sigmoid']
 
-# H) main RF parameters' tuning via random grid search
-n_estimators = np.arange(start = 100, stop = 251, step = 50, dtype = int)
-criterion = ['gini', 'entropy']
-max_depth = np.arange(start = 1, stop = 201, step = 25, dtype = int)
-min_samples_split = np.arange(start = 1, stop = 31, step = 5, dtype = int)
-min_samples_leaf = np.arange(start = 1, stop = 5, step = 1, dtype = int)
-max_features = ['auto', 'sqrt']
-bootstrap = [True, False]
-
-random_grid = {'n_estimators': n_estimators,
-               'criterion': criterion,
-               'max_depth': max_depth,
-               'min_samples_split': min_samples_split,
-               'min_samples_leaf': min_samples_leaf,
-               'max_features': max_features,
-               'bootstrap': bootstrap,
+random_grid = {'C': C,
+               'gamma': gamma,
+               'kernel': kernel
                }
 
-RF_random = RandomizedSearchCV(estimator = RF,
+SVM_random = RandomizedSearchCV(estimator = SVM,
                                param_distributions = random_grid,
                                n_iter = 10, # default = 10
                                scoring = None,
@@ -141,45 +127,40 @@ RF_random = RandomizedSearchCV(estimator = RF,
                                error_score = np.nan,
                                return_train_score = False)
 
-# fit/predict new optimised RF classifier
-RF_random_model = make_pipeline(preprocessor, RF_random)
-model_random_output = RF_random_model.fit(X_train, y_train)
-y_pred_random = RF_random_model.predict(X_test)
+# fit/predict new optimised SVM classifier
+SVM_random_model = make_pipeline(preprocessor, SVM_random)
+model_random_output = SVM_random_model.fit(X_train, y_train)
+y_pred_random = SVM_random_model.predict(X_test)
 
 # check which are the chosen params 
-print(RF_random.best_params_)
+print(SVM_random.best_params_)
 
 # evaluate updated metrics
-print(RF_random_model.score(X_train, y_train))
-print(RF_random_model.score(X_test, y_test))
+print(SVM_random_model.score(X_train, y_train))
+print(SVM_random_model.score(X_test, y_test))
 
 
-# I) main RF parameters' refinement via grid search
-search_grid = {'n_estimators': np.linspace(start = 150, stop = 300, num = 5, dtype = int),
-                'min_samples_split': np.linspace(start = 10, stop = 20, num = 5, dtype = int),
-                'min_samples_leaf': np.linspace(start = 2, stop = 6, num = 4, dtype = int),
-                'max_depth': np.linspace(start = 140, stop = 180, num = 4, dtype = int)}
+# I) main SVM parameters' refinement via grid search
+search_grid = {'C': [0.1, 1, 10, 100, 1000],
+              'gamma': [1, 0.1, 0.01, 0.001, 0.0001]}
 
-RF_refined = RandomForestClassifier(n_estimators = 100,
-                                    criterion = 'gini',
-                                    max_depth = None,
-                                    min_samples_split = 2,
-                                    min_samples_leaf = 1,
-                                    min_weight_fraction_leaf = 0.0,
-                                    max_features = 'sqrt',
-                                    max_leaf_nodes = None,
-                                    min_impurity_decrease = 0.0,
-                                    bootstrap = True, 
-                                    oob_score = True, # default = True
-                                    n_jobs = None,
-                                    random_state = None,
-                                    verbose = 0,
-                                    warm_start = False,
-                                    class_weight = None,
-                                    ccp_alpha = 0.0,
-                                    max_samples = None)
+SVM_refined = SVC(C = 1.0, # regularization parameter
+                  kernel = 'rbf', # {'linear', 'poly', 'rbf', 'sigmoid', 'precomputed'}
+                  degree = 3, # polynomial degree (poly only, ignored by others)
+                  gamma = 'scale', # kernel coefficient (rbf, poly, sigmoid only)
+                  coef0 = 0.0, # independent term of kernel (poly, sigmoid only)
+                  shrinking = True,
+                  probability = False,
+                  tol = 1e-3,
+                  cache_size = 200,
+                  class_weight = None, # None = all classes have weight one
+                  verbose = False,
+                  max_iter = -1, # -1 = no limit
+                  decision_function_shape = 'ovr', # ignored for binary classification
+                  break_ties = False,
+                  random_state = None) 
 
-RF_search = GridSearchCV(estimator = RF_refined,
+SVM_search = GridSearchCV(estimator = SVM_refined,
                          param_grid = search_grid,
                          scoring = None,
                          n_jobs = None,
@@ -190,17 +171,17 @@ RF_search = GridSearchCV(estimator = RF_refined,
                          error_score = np.nan,
                          return_train_score = False)
 
-# fit/predict new optimised RF classifier
-RF_search_model = make_pipeline(preprocessor, RF_search)
-model_search_output = RF_search_model.fit(X_train, y_train)
-y_pred_search = RF_search_model.predict(X_test)
+# fit/predict new optimised SVM classifier
+SVM_search_model = make_pipeline(preprocessor, SVM_search)
+model_search_output = SVM_search_model.fit(X_train, y_train)
+y_pred_search = SVM_search_model.predict(X_test)
 
 # check which are the chosen params 
-print(RF_search.best_params_)
+print(SVM_search.best_params_)
 
 # evaluate updated metrics
-print(RF_search_model.score(X_train, y_train))
-print(RF_search_model.score(X_test, y_test))
+print(SVM_search_model.score(X_train, y_train))
+print(SVM_search_model.score(X_test, y_test))
 
 
 # J) save fitted model output for quick future loading
@@ -209,5 +190,5 @@ print(RF_search_model.score(X_test, y_test))
 #model2 = pickle.loads(s)
 
 # to file
-pickle.dump(model_output, open('intro2ml_2021_final_project\\Data\\rf_full.pkl', 'wb'))
-#model_2 = pickle.load(open('intro2ml_2021_final_project\\Data\\rf.pkl', 'rb'))
+pickle.dump(model_output, open('intro2ml_2021_final_project\\Data\\svm_full.pkl', 'wb'))
+#model_2 = pickle.load(open('intro2ml_2021_final_project\\Data\\svm_full.pkl', 'rb'))

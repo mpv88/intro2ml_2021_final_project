@@ -1,7 +1,7 @@
 from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV, RandomizedSearchCV
 from sklearn.compose import ColumnTransformer, make_column_selector
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn import metrics
 import matplotlib.pyplot as plt
@@ -45,32 +45,29 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, rando
 
 
 # D) define and fit/predict models
-RF = RandomForestClassifier(n_estimators = 100,
-                            criterion = 'gini',
-                            max_depth = None,
-                            min_samples_split = 2,
-                            min_samples_leaf = 1,
-                            min_weight_fraction_leaf = 0.0,
-                            max_features = 'auto',
-                            max_leaf_nodes = None,
-                            min_impurity_decrease = 0.0,
-                            bootstrap = True, 
-                            oob_score = False, # default = False
-                            n_jobs = None,
-                            random_state = None,
-                            verbose = 0,
-                            warm_start = False,
-                            class_weight = None,
-                            ccp_alpha = 0.0,
-                            max_samples = None)
+LR = LogisticRegression(penalty = 'l2', # {'l1', 'l2', 'elasticnet', 'none'}, l1=lasso l2=ridge
+                        dual = False,
+                        tol = 1e-4,
+                        C = 1.0,
+                        fit_intercept = True,
+                        intercept_scaling = 1,
+                        class_weight = None, # None = all classes supposed to have weight one
+                        random_state = None, # used for solver = ('sag', 'saga','liblinear')
+                        solver = 'lbfgs', # {'newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'}
+                        max_iter = 100,
+                        multi_class = 'auto', # {'auto', 'ovr', 'multinomial'}
+                        verbose = 0,
+                        warm_start = False,
+                        n_jobs = None,
+                        l1_ratio = None)
 
-RF_model = make_pipeline(preprocessor, RF)
-model_output = RF_model.fit(X_train, y_train)
-y_pred = RF_model.predict(X_test)
+LR_model = make_pipeline(preprocessor, LR)
+model_output = LR_model.fit(X_train, y_train)
+y_pred = LR_model.predict(X_test)
 
 
 # E) cross validation
-cv_results = cross_validate(RF_model, X, y, cv = 5)
+cv_results = cross_validate(LR_model, X, y, cv = 5)
 scores = cv_results['test_score']
 print(cv_results)
 print('The mean cross-validation accuracy is: 'f'{scores.mean():.3f} +/- {scores.std():.3f}')
@@ -83,51 +80,39 @@ print("Precision:", metrics.precision_score(y_test, y_pred))
 print("Recall:", metrics.recall_score(y_test, y_pred))
 print("F1 score:", metrics.f1_score(y_test, y_pred))
 print(metrics.classification_report(y_test, y_pred))
-print(RF_model.score(X_train, y_train))
-print(RF_model.score(X_test, y_test))
-
-# OOB error
-# oob_error = 1 - RF.oob_score_
-# print('The OOB error is: ', oob_error)
+print(LR_model.score(X_train, y_train))
+print(LR_model.score(X_test, y_test))
 
 # print ROC
-rfc_disp = metrics.RocCurveDisplay.from_estimator(RF_model, X_test, y_test, alpha=0.8)
+rfc_disp = metrics.RocCurveDisplay.from_estimator(LR_model, X_test, y_test, alpha=0.8)
 plt.show()
 
 
 # G) evaluate variable importance & plot
-labels = [s.replace('one-hot-encoder__','').replace('standard-scaler__','') for s in RF_model[:-1].get_feature_names_out()] # RF_model[1].feature_names_in_
-feature_importance = pd.Series(RF.feature_importances_, index = labels).sort_values(ascending = False)
+labels = [s.replace('one-hot-encoder__','').replace('standard-scaler__','') for s in LR_model[:-1].get_feature_names_out()]
+feature_importance = pd.Series(np.transpose(abs(LR.coef_).tolist()[0]), index=labels).sort_values(ascending = False)
 print(feature_importance)
 
 # plot
 sns.barplot(x = feature_importance, y = feature_importance.index)
-plt.xlabel('Feature Importance Score')
+plt.xlabel('Most constributing features by coefficient')
 plt.ylabel('Features')
-plt.title('RF: Importance of Features')
+plt.title('LR: Importance of Features')
 plt.legend()
 plt.show()
 
 
-# H) main RF parameters' tuning via random grid search
-n_estimators = np.arange(start = 100, stop = 251, step = 50, dtype = int)
-criterion = ['gini', 'entropy']
-max_depth = np.arange(start = 1, stop = 201, step = 25, dtype = int)
-min_samples_split = np.arange(start = 1, stop = 31, step = 5, dtype = int)
-min_samples_leaf = np.arange(start = 1, stop = 5, step = 1, dtype = int)
-max_features = ['auto', 'sqrt']
-bootstrap = [True, False]
+# H) main LR parameters' tuning via random grid search
+penalty = ['none', 'l1', 'l2', 'elasticnet']
+C = [100, 10, 1.0, 0.1, 0.01]
+solver = ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga']
 
-random_grid = {'n_estimators': n_estimators,
-               'criterion': criterion,
-               'max_depth': max_depth,
-               'min_samples_split': min_samples_split,
-               'min_samples_leaf': min_samples_leaf,
-               'max_features': max_features,
-               'bootstrap': bootstrap,
+random_grid = {'penalty': penalty,
+               'C': C,
+               'solver': solver,
                }
 
-RF_random = RandomizedSearchCV(estimator = RF,
+LR_random = RandomizedSearchCV(estimator = LR,
                                param_distributions = random_grid,
                                n_iter = 10, # default = 10
                                scoring = None,
@@ -140,45 +125,41 @@ RF_random = RandomizedSearchCV(estimator = RF,
                                error_score = np.nan,
                                return_train_score = False)
 
-# fit/predict new optimised RF classifier
-RF_random_model = make_pipeline(preprocessor, RF_random)
-model_random_output = RF_random_model.fit(X_train, y_train)
-y_pred_random = RF_random_model.predict(X_test)
+# fit/predict new optimised LR classifier
+LR_random_model = make_pipeline(preprocessor, LR_random)
+model_random_output = LR_random_model.fit(X_train, y_train)
+y_pred_random = LR_random_model.predict(X_test)
 
 # check which are the chosen params 
-print(RF_random.best_params_)
+print(LR_random.best_params_)
+print(LR_random.best_estimator_)
 
 # evaluate updated metrics
-print(RF_random_model.score(X_train, y_train))
-print(RF_random_model.score(X_test, y_test))
+print(LR_random_model.score(X_train, y_train))
+print(LR_random_model.score(X_test, y_test))
 
 
-# I) main RF parameters' refinement via grid search
-search_grid = {'n_estimators': np.linspace(start = 150, stop = 300, num = 5, dtype = int),
-                'min_samples_split': np.linspace(start = 10, stop = 20, num = 5, dtype = int),
-                'min_samples_leaf': np.linspace(start = 2, stop = 6, num = 4, dtype = int),
-                'max_depth': np.linspace(start = 140, stop = 180, num = 4, dtype = int)}
+# I) main LR parameters' refinement via grid search
+search_grid = {'C': np.linspace(start = 0.005, stop = 0.05, num = 10, dtype = int),
+                }
 
-RF_refined = RandomForestClassifier(n_estimators = 100,
-                                    criterion = 'gini',
-                                    max_depth = None,
-                                    min_samples_split = 2,
-                                    min_samples_leaf = 1,
-                                    min_weight_fraction_leaf = 0.0,
-                                    max_features = 'sqrt',
-                                    max_leaf_nodes = None,
-                                    min_impurity_decrease = 0.0,
-                                    bootstrap = True, 
-                                    oob_score = True, # default = True
-                                    n_jobs = None,
-                                    random_state = None,
-                                    verbose = 0,
-                                    warm_start = False,
-                                    class_weight = None,
-                                    ccp_alpha = 0.0,
-                                    max_samples = None)
+LR_refined = LogisticRegression(penalty = 'none', # {'l1', 'l2', 'elasticnet', 'none'}
+                                dual = False,
+                                tol = 1e-4,
+                                C = 1.0,
+                                fit_intercept = True,
+                                intercept_scaling = 1,
+                                class_weight = None, # None = all classes supposed to have weight one
+                                random_state = None, # used for solver = ('sag', 'saga','liblinear')
+                                solver = 'newton-cg', # {'newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'}
+                                max_iter = 100,
+                                multi_class = 'auto', # {'auto', 'ovr', 'multinomial'}
+                                verbose = 0,
+                                warm_start = False,
+                                n_jobs = None,
+                                l1_ratio = None)
 
-RF_search = GridSearchCV(estimator = RF_refined,
+LR_search = GridSearchCV(estimator = LR_refined,
                          param_grid = search_grid,
                          scoring = None,
                          n_jobs = None,
@@ -189,17 +170,18 @@ RF_search = GridSearchCV(estimator = RF_refined,
                          error_score = np.nan,
                          return_train_score = False)
 
-# fit/predict new optimised RF classifier
-RF_search_model = make_pipeline(preprocessor, RF_search)
-model_search_output = RF_search_model.fit(X_train, y_train)
-y_pred_search = RF_search_model.predict(X_test)
+# fit/predict new optimised LR classifier
+LR_search_model = make_pipeline(preprocessor, LR_search)
+model_search_output = LR_search_model.fit(X_train, y_train)
+y_pred_search = LR_search_model.predict(X_test)
 
 # check which are the chosen params 
-print(RF_search.best_params_)
+print(LR_search.best_params_)
+print(LR_search.best_estimator_)
 
 # evaluate updated metrics
-print(RF_search_model.score(X_train, y_train))
-print(RF_search_model.score(X_test, y_test))
+print(LR_search_model.score(X_train, y_train))
+print(LR_search_model.score(X_test, y_test))
 
 
 # J) save fitted model output for quick future loading
@@ -208,5 +190,5 @@ print(RF_search_model.score(X_test, y_test))
 #model2 = pickle.loads(s)
 
 # to file
-pickle.dump(model_output, open('intro2ml_2021_final_project\\Data\\rf_full.pkl', 'wb'))
-#model_2 = pickle.load(open('intro2ml_2021_final_project\\Data\\rf.pkl', 'rb'))
+pickle.dump(model_output, open('intro2ml_2021_final_project\\Data\\lr_full.pkl', 'wb'))
+#model_2 = pickle.load(open('intro2ml_2021_final_project\\Data\\lr_full.pkl', 'rb'))

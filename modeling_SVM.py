@@ -108,10 +108,12 @@ plt.show()
 C = [0.1, 1, 10, 100, 1000]
 gamma = [1, 0.1, 0.01, 0.001, 0.0001]
 kernel = ['linear', 'poly', 'rbf', 'sigmoid']
+degree = [2, 3, 4]
 
 random_grid = {'C': C,
                'gamma': gamma,
-               'kernel': kernel
+               'kernel': kernel,
+               'degree': degree
                }
 
 SVM_random = RandomizedSearchCV(estimator = SVM,
@@ -134,6 +136,7 @@ y_pred_random = SVM_random_model.predict(X_test)
 
 # check which are the chosen params 
 print(SVM_random.best_params_)
+print(SVM_random.best_estimator_)
 
 # evaluate updated metrics
 print(SVM_random_model.score(X_train, y_train))
@@ -142,7 +145,8 @@ print(SVM_random_model.score(X_test, y_test))
 
 # I) main SVM parameters' refinement via grid search
 search_grid = {'C': [0.1, 1, 10, 100, 1000],
-              'gamma': [1, 0.1, 0.01, 0.001, 0.0001]}
+              'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
+              'degree': [2, 3, 4]}
 
 SVM_refined = SVC(C = 1.0, # regularization parameter
                   kernel = 'rbf', # {'linear', 'poly', 'rbf', 'sigmoid', 'precomputed'}
@@ -178,6 +182,7 @@ y_pred_search = SVM_search_model.predict(X_test)
 
 # check which are the chosen params 
 print(SVM_search.best_params_)
+print(SVM_search.best_estimator_)
 
 # evaluate updated metrics
 print(SVM_search_model.score(X_train, y_train))

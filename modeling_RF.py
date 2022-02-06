@@ -147,6 +147,7 @@ y_pred_random = RF_random_model.predict(X_test)
 
 # check which are the chosen params 
 print(RF_random.best_params_)
+print(RF_random.best_estimator_)
 
 # evaluate updated metrics
 print(RF_random_model.score(X_train, y_train))
@@ -196,6 +197,7 @@ y_pred_search = RF_search_model.predict(X_test)
 
 # check which are the chosen params 
 print(RF_search.best_params_)
+print(RF_search.best_estimator_)
 
 # evaluate updated metrics
 print(RF_search_model.score(X_train, y_train))

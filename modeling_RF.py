@@ -104,7 +104,7 @@ print(feature_importance)
 sns.barplot(x = feature_importance, y = feature_importance.index)
 plt.xlabel('Feature Importance Score')
 plt.ylabel('Features')
-plt.title('Visualizing Important Features')
+plt.title('RF: Importance of Features')
 plt.legend()
 plt.show()
 

@@ -45,6 +45,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, rando
 
 
 # D) define and fit/predict models
+#TODO: avanti!
 RF = RandomForestClassifier(n_estimators = 100,
                             criterion = 'gini',
                             max_depth = None,

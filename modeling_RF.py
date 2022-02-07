@@ -12,7 +12,7 @@ import pickle
 
 
 # A) load dataset & define variables
-tweets_df = pd.read_csv('intro2ml_2021_final_project\\Data\\2k_sample_processed.csv', encoding = 'utf-8')
+tweets_df = pd.read_csv(r'C:\Users\loren\Documents\GitHub\intro2ml_2021_final_project\Data\full_sample_processed.csv', encoding = 'utf-8')
 tweets_df['weekday'] = tweets_df['weekday'].astype('category')
 tweets_df['hour'] = tweets_df['hour'].astype('category')
 tweets_df['quote_url'] = tweets_df['quote_url'].astype('category')
@@ -63,7 +63,7 @@ RF = RandomForestClassifier(n_estimators = 100,
                             class_weight = None,
                             ccp_alpha = 0.0,
                             max_samples = None)
-
+'''
 RF_model = make_pipeline(preprocessor, RF)
 model_output = RF_model.fit(X_train, y_train)
 y_pred = RF_model.predict(X_test)
@@ -110,11 +110,11 @@ plt.show()
 
 
 # H) main RF parameters' tuning via random grid search
-n_estimators = np.arange(start = 100, stop = 251, step = 50, dtype = int)
+n_estimators = np.arange(start = 100, stop = 351, step = 25, dtype = int)
 criterion = ['gini', 'entropy']
 max_depth = np.arange(start = 1, stop = 201, step = 25, dtype = int)
-min_samples_split = np.arange(start = 1, stop = 31, step = 5, dtype = int)
-min_samples_leaf = np.arange(start = 1, stop = 5, step = 1, dtype = int)
+min_samples_split = np.arange(start = 1, stop = 51, step = 2, dtype = int)
+min_samples_leaf = np.arange(start = 1, stop = 10, step = 1, dtype = int)
 max_features = ['auto', 'sqrt']
 bootstrap = [True, False]
 
@@ -129,7 +129,7 @@ random_grid = {'n_estimators': n_estimators,
 
 RF_random = RandomizedSearchCV(estimator = RF,
                                param_distributions = random_grid,
-                               n_iter = 10, # default = 10
+                               n_iter = 50, # default = 10
                                scoring = None,
                                n_jobs = None,
                                refit = True,
@@ -152,16 +152,16 @@ print(RF_random.best_estimator_)
 # evaluate updated metrics
 print(RF_random_model.score(X_train, y_train))
 print(RF_random_model.score(X_test, y_test))
-
+'''
 
 # I) main RF parameters' refinement via grid search
-search_grid = {'n_estimators': np.linspace(start = 150, stop = 300, num = 5, dtype = int),
-                'min_samples_split': np.linspace(start = 10, stop = 20, num = 5, dtype = int),
-                'min_samples_leaf': np.linspace(start = 2, stop = 6, num = 4, dtype = int),
-                'max_depth': np.linspace(start = 140, stop = 180, num = 4, dtype = int)}
+search_grid = {'n_estimators': np.linspace(start = 200, stop = 300, num = 5, dtype = int),
+                'min_samples_split': np.linspace(start = 36, stop = 48, num = 6, dtype = int),
+                'min_samples_leaf': np.linspace(start = 1, stop = 3, num = 3, dtype = int),
+                'max_depth': np.linspace(start = 102, stop = 142, num = 5, dtype = int)}
 
 RF_refined = RandomForestClassifier(n_estimators = 100,
-                                    criterion = 'gini',
+                                    criterion = 'entropy',
                                     max_depth = None,
                                     min_samples_split = 2,
                                     min_samples_leaf = 1,
@@ -169,8 +169,8 @@ RF_refined = RandomForestClassifier(n_estimators = 100,
                                     max_features = 'sqrt',
                                     max_leaf_nodes = None,
                                     min_impurity_decrease = 0.0,
-                                    bootstrap = True, 
-                                    oob_score = True, # default = True
+                                    bootstrap = False, 
+                                    oob_score = False, # default = True
                                     n_jobs = None,
                                     random_state = None,
                                     verbose = 0,
@@ -189,7 +189,7 @@ RF_search = GridSearchCV(estimator = RF_refined,
                          pre_dispatch = '2*n_jobs',
                          error_score = np.nan,
                          return_train_score = False)
-
+print("GRID STARTED!!!!!!!!!")
 # fit/predict new optimised RF classifier
 RF_search_model = make_pipeline(preprocessor, RF_search)
 model_search_output = RF_search_model.fit(X_train, y_train)
@@ -210,5 +210,5 @@ print(RF_search_model.score(X_test, y_test))
 #model2 = pickle.loads(s)
 
 # to file
-pickle.dump(model_output, open('intro2ml_2021_final_project\\Data\\rf_full.pkl', 'wb'))
+pickle.dump(model_search_output, open(r'C:\Users\loren\Documents\GitHub\intro2ml_2021_final_project\Data\rf_full.pkl', 'wb'))
 #model_2 = pickle.load(open('intro2ml_2021_final_project\\Data\\rf_full.pkl', 'rb'))

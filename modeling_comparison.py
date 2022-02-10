@@ -78,7 +78,7 @@ print(df_model)
 
 # 2. plot metrics comparison
 ax  = df_model.plot.bar(rot=45)
-ax.legend(ncol = len(models.keys()), loc=8, bbox_to_anchor=(0.25, -0.3, 0.5, 0.5), prop={'size': 14})
+ax.legend(ncol = len(models.keys()), loc=8, bbox_to_anchor=(0.25, -0.5, 0.5, 0.5), prop={'size': 14})
 plt.title('Evaluation metrics comparison', fontweight='bold', fontsize=15)
 plt.tight_layout()
 plt.show()

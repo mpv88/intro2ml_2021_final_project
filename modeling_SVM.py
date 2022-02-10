@@ -12,7 +12,7 @@ import pickle
 
 
 # A) load dataset & define variables
-tweets_df = pd.read_csv('intro2ml_2021_final_project\\Data\\2k_sample_processed.csv', encoding = 'utf-8')
+tweets_df = pd.read_csv(r'C:\Users\loren\Documents\GitHub\intro2ml_2021_final_project\Data\full_sample_processed.csv', encoding = 'utf-8')
 tweets_df['weekday'] = tweets_df['weekday'].astype('category')
 tweets_df['hour'] = tweets_df['hour'].astype('category')
 tweets_df['quote_url'] = tweets_df['quote_url'].astype('category')
@@ -46,7 +46,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, rando
 
 # D) define and fit/predict models
 SVM = SVC(C = 1.0, # regularization parameter
-          kernel = 'rbf', # {'linear', 'poly', 'rbf', 'sigmoid', 'precomputed'}
+          kernel = 'linear', # {'linear', 'poly', 'rbf', 'sigmoid', 'precomputed'}
           degree = 3, # polynomial degree (poly only, ignored by others)
           gamma = 'scale', # kernel coefficient (rbf, poly, sigmoid only)
           coef0 = 0.0, # independent term of kernel (poly, sigmoid only)
@@ -90,7 +90,7 @@ plt.show()
 
 # G) evaluate variable importance & plot JUST FOR LINEAR KERNEL 
 # (see https://stackoverflow.com/questions/41592661/determining-the-most-contributing-features-for-svm-classifier-in-sklearn) & sklearn.inspection.permutation_importance
-'''
+
 labels = [s.replace('one-hot-encoder__','').replace('standard-scaler__','') for s in SVM_model[:-1].get_feature_names_out()]
 feature_importance = pd.Series(np.transpose(abs(SVM.coef_).tolist()[0]), index=labels).sort_values(ascending = False)
 print(feature_importance)
@@ -102,17 +102,16 @@ plt.ylabel('Features')
 plt.title('SVM: Importance of Features')
 plt.legend()
 plt.show()
-'''
 
 # H) main SVM parameters' tuning via random grid search
 C = [0.1, 1, 10, 100, 1000]
 gamma = [1, 0.1, 0.01, 0.001, 0.0001]
-kernel = ['linear', 'poly', 'rbf', 'sigmoid']
+#kernel = ['linear', 'poly', 'rbf', 'sigmoid']
 degree = [2, 3, 4]
 
 random_grid = {'C': C,
                'gamma': gamma,
-               'kernel': kernel,
+#               'kernel': kernel,
                'degree': degree
                }
 
@@ -195,5 +194,5 @@ print(SVM_search_model.score(X_test, y_test))
 #model2 = pickle.loads(s)
 
 # to file
-pickle.dump(model_output, open('intro2ml_2021_final_project\\Data\\svm_full.pkl', 'wb'))
+pickle.dump(model_output, open(r'C:\Users\loren\Documents\GitHub\intro2ml_2021_final_project\Data\svm_full.pkl', 'wb'))
 #model_2 = pickle.load(open('intro2ml_2021_final_project\\Data\\svm_full.pkl', 'rb'))

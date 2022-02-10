@@ -70,7 +70,7 @@ y_pred = RF_model.predict(X_test)
 
 
 # E) cross validation
-cv_results = cross_validate(RF_model, X, y, cv = 5)
+cv_results = cross_validate(RF_model, X_train, y_train, cv = 5)
 scores = cv_results['test_score']
 print(cv_results)
 print('The mean cross-validation accuracy is: 'f'{scores.mean():.3f} +/- {scores.std():.3f}')

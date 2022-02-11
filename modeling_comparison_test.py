@@ -73,7 +73,7 @@ df_model = pd.DataFrame(index=models.keys(), columns=['Accuracy', 'Precision', '
 df_model['Accuracy'] = accuracy.values()
 df_model['Precision'] = precision.values()
 df_model['Recall'] = recall.values()
-df_model['F1 Score'] = recall.values()
+df_model['F1 Score'] = f1.values()
 print(df_model)
 
 # 2. plot metrics comparison

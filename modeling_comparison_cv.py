@@ -4,7 +4,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_validate
 from sklearn.compose import ColumnTransformer, make_column_selector
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.pipeline import make_pipeline
@@ -57,15 +57,24 @@ models['K-Nearest Neighbor'] = make_pipeline(preprocessor, KNeighborsClassifier(
 # E)  fit/predict models & collect metrcs
 accuracy, precision, recall, f1 = {}, {}, {}, {}
 
-for key in models.keys():
-    models[key].fit(X_train, y_train) # model fit
-    y_pred = models[key].predict(X_test)  # model predict
-    
-    accuracy[key] = metrics.accuracy_score(y_test, y_pred)
-    precision[key] = metrics.precision_score(y_test, y_pred)
-    recall[key] = metrics.recall_score(y_test, y_pred)
-    f1[key] = metrics.f1_score(y_test, y_pred)
+#Scores
+scoring = {'accuracy' : metrics.make_scorer(metrics.accuracy_score), 
+           'precision' : metrics.make_scorer(metrics.precision_score),
+           'recall' : metrics.make_scorer(metrics.recall_score), 
+           'f1_score' : metrics.make_scorer(metrics.f1_score)}
 
+for key in models.keys():
+    scores = cross_validate(models[key], X_train, y_train, cv=5, scoring=scoring)
+
+    accuracy[key] = scores['test_accuracy'].mean()
+    precision[key] = scores['test_precision'].mean()
+    recall[key] = scores['test_recall'].mean()
+    f1[key] = scores['test_f1_score'].mean()
+    
+    print("Accuracy (Testing):  %.3f (+/- %.3f)" % (scores['test_accuracy'].mean(), scores['test_accuracy'].std()))
+    print("Precision (Testing):  %.3f (+/- %.3f)" % (scores['test_precision'].mean(), scores['test_precision'].std()))
+    print("Recall (Testing):  %.3f (+/- %.3f)" % (scores['test_recall'].mean(), scores['test_recall'].std()))
+    print("F1-Score (Testing):  %.3f (+/- %.3f)" % (scores['test_f1_score'].mean(), scores['test_f1_score'].std()))
 
 # F)  plot results & compare performances 
 # 1. gather table of results
@@ -73,7 +82,7 @@ df_model = pd.DataFrame(index=models.keys(), columns=['Accuracy', 'Precision', '
 df_model['Accuracy'] = accuracy.values()
 df_model['Precision'] = precision.values()
 df_model['Recall'] = recall.values()
-df_model['F1 Score'] = recall.values()
+df_model['F1 Score'] = f1.values()
 print(df_model)
 
 # 2. plot metrics comparison

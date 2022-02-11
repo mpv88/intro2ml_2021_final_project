@@ -24,11 +24,6 @@ The students are allowed (and encouraged) to refer to existing (technical/scient
 The goal is to build a tool for predicting how popular will be a tweet about food. 
 There is no data available for this problem: the student is hence required to obtain it, if the proposed solution is based on data (likely it will be!).
 
-Sources:
-http://belindazeng.github.io/goingviral/
-https://towardsdatascience.com/using-data-science-to-predict-viral-tweets-615b0acc2e1e
-https://towardsdatascience.com/extracting-data-from-twitter-using-python-5ab67bff553a
-https://www.sciencedirect.com/science/article/abs/pii/S0957417420306096
 
 #TODO:
 a) plot OBB vs n_estimators/accuracy vs n_estimators 
@@ -46,3 +41,7 @@ Accuracy+AUCROC & F1+AUCPR
 \includegraphics[scale=0.8]{Fig2.png}
 \end{frame}
 1) istogramma cv, 2) acroc cv, 3) var importance 4) classification report rf lasr
+
+rifare model comparison
+inserire classification report in final RF
+inserire note corrette

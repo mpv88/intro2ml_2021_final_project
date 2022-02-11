@@ -67,41 +67,45 @@ for key in models.keys():
     scores = cross_validate(models[key], X_train, y_train, cv=5, scoring=scoring)
 
     accuracy[key] = scores['test_accuracy'].mean()
-    precision[key] = scores['test_precision'].mean()
-    recall[key] = scores['test_recall'].mean()
-    f1[key] = scores['test_f1_score'].mean()
-    
     print("Accuracy (Testing):  %.3f (+/- %.3f)" % (scores['test_accuracy'].mean(), scores['test_accuracy'].std()))
+    precision[key] = scores['test_precision'].mean()
     print("Precision (Testing):  %.3f (+/- %.3f)" % (scores['test_precision'].mean(), scores['test_precision'].std()))
+    recall[key] = scores['test_recall'].mean()
     print("Recall (Testing):  %.3f (+/- %.3f)" % (scores['test_recall'].mean(), scores['test_recall'].std()))
+    f1[key] = scores['test_f1_score'].mean()
     print("F1-Score (Testing):  %.3f (+/- %.3f)" % (scores['test_f1_score'].mean(), scores['test_f1_score'].std()))
 
 # F)  plot results & compare performances 
 # 1. gather table of results
-df_model = pd.DataFrame(index=models.keys(), columns=['Accuracy', 'Precision', 'Recall', 'F1 Score'])
-df_model['Accuracy'] = accuracy.values()
-df_model['Precision'] = precision.values()
-df_model['Recall'] = recall.values()
-df_model['F1 Score'] = f1.values()
+df_model = pd.DataFrame(index=models.keys(), columns=['Mean Accuracy', 'Mean Precision', 'Mean Recall', 'Mean F1 Score'])
+df_model['Mean Accuracy'] = accuracy.values()
+df_model['Mean Precision'] = precision.values()
+df_model['Mean Recall'] = recall.values()
+df_model['Mean F1 Score'] = f1.values()
 print(df_model)
 
 # 2. plot metrics comparison
 ax  = df_model.plot.bar(rot=45)
-ax.legend(ncol = len(models.keys()), loc=8, bbox_to_anchor=(0.25, -0.3, 0.5, 0.5), prop={'size': 14})
-plt.title('Evaluation metrics comparison', fontweight='bold', fontsize=15)
+ax.legend(ncol = len(models.keys()), loc=8, bbox_to_anchor=(0.25, -0.4, 0.5, 0.5), prop={'size': 14})
+plt.title('Evaluation metrics comparison', fontweight='bold', fontsize=30)
 plt.tight_layout()
 plt.show()
 
 # 3. plot ROC-AUC comparison
-ax = plt.gca()
+''' ax = plt.gca()
 plt.title('ROC Curve comparison', fontweight='bold', fontsize=15)
 for key in models.keys():
-    metrics.RocCurveDisplay.from_estimator(models[key], X_test, y_test, name=key, ax=ax, alpha=0.8)
-plt.show()
+    
+    
+    
+    
+    metrics.RocCurveDisplay.from_estimator(models[key], X_train, y_train, name=key, ax=ax, alpha=0.8)
+plt.show() '''
+
 
 # 4. plot ROC-AUC comparison
-ax = plt.gca()
+''' ax = plt.gca()
 plt.title('Precision-Recall Curve comparison', fontweight='bold', fontsize=15)
 for key in models.keys():
-    metrics.PrecisionRecallDisplay.from_estimator(models[key], X_test, y_test, name=key, ax=ax, alpha=0.8)
-plt.show()
+    metrics.PrecisionRecallDisplay.from_estimator(models[key], X_train, y_train, name=key, ax=ax, alpha=0.8)
+plt.show() '''

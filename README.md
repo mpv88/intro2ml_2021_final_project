@@ -30,9 +30,5 @@ https://scikit-learn.org/stable/auto_examples/ensemble/plot_ensemble_oob.html#sp
 https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_stats.html
 https://datascience.stackexchange.com/questions/86049/how-plot-gridsearch-results
 https://datascience.stackexchange.com/questions/64441/how-to-interpret-classification-report-of-scikit-learn
-for PR curve the auc of the random model is n_positive/(n_positive+n_negative).
-Area under ROC curve is threshold and scale invariant while accuracy depends on the chosen threshold value and is scale variant
 https://medium.com/nerd-for-tech/accuracy-vs-auc-roc-a8e7a384d153
-Accuracy+AUCROC & F1+AUCPR
-
-1) istogramma cv, 2) acroc cv, 3) var importance 4) classification report rf lasr
+for PR curve the auc of the random model is n_positive/(n_positive+n_negative)

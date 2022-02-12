@@ -17,7 +17,7 @@ warnings.filterwarnings('ignore')
 
 
 # A) load dataset & define variables
-tweets_df = pd.read_csv(r'C:\Users\loren\Documents\GitHub\intro2ml_2021_final_project\Data\full_sample_processed.csv', encoding='utf-8')
+tweets_df = pd.read_csv('intro2ml_2021_final_project\\Data\\2k_sample_processed.csv', encoding='utf-8')
 tweets_df['weekday'] = tweets_df['weekday'].astype('category')
 tweets_df['hour'] = tweets_df['hour'].astype('category')
 tweets_df['quote_url'] = tweets_df['quote_url'].astype('category')
@@ -116,7 +116,7 @@ for key in models.keys():
     mean_tpr[-1] = 1.0
     mean_auc = metrics.auc(mean_fpr, mean_tpr)
     std_auc = np.std(aucs)
-    ax.plot(mean_fpr, mean_tpr, label=r"Mean ROC {} (AUC = %0.2f $\pm$ %0.2f)".format(key) % (mean_auc, std_auc), lw=2, alpha=0.8)
+    ax.plot(mean_fpr, mean_tpr, label=r"Mean ROC {} (AUC = %.3f $\pm$ %.3f)".format(key) % (mean_auc, std_auc), lw=2, alpha=0.8)
 
 ax.plot([0, 1], [0, 1], linestyle="--", lw=2, color="black", label="Chance", alpha=0.8)
 ax.set(xlim=[-0.05, 1.05], ylim=[-0.05, 1.05])

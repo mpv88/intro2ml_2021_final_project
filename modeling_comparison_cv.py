@@ -17,7 +17,7 @@ warnings.filterwarnings('ignore')
 
 
 # A) load dataset & define variables
-tweets_df = pd.read_csv('intro2ml_2021_final_project\\Data\\2k_sample_processed.csv', encoding='utf-8')
+tweets_df = pd.read_csv(r'C:\Users\loren\Documents\GitHub\intro2ml_2021_final_project\Data\full_sample_processed.csv', encoding='utf-8')
 tweets_df['weekday'] = tweets_df['weekday'].astype('category')
 tweets_df['hour'] = tweets_df['hour'].astype('category')
 tweets_df['quote_url'] = tweets_df['quote_url'].astype('category')
@@ -91,7 +91,7 @@ print(df_model)
 
 # 2. plot metrics comparison
 ax = df_model.plot.bar(rot=0)
-ax.legend(ncol = len(models.keys()), loc=8, bbox_to_anchor=(0.25, -0.1, 0.5, 0.5), prop={'size': 12})
+ax.legend(ncol = len(models.keys()), loc=8, bbox_to_anchor=(0.25, -0.13, 0.5, 0.5), prop={'size': 12})
 plt.title('Performance metrics comparison for 5-fold CV', fontweight='bold', fontsize=15)
 plt.show()
 

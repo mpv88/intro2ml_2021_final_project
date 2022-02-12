@@ -26,22 +26,13 @@ There is no data available for this problem: the student is hence required to ob
 
 
 #TODO:
-a) plot OBB vs n_estimators/accuracy vs n_estimators 
 https://scikit-learn.org/stable/auto_examples/ensemble/plot_ensemble_oob.html#sphx-glr-auto-examples-ensemble-plot-ensemble-oob-py
 https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_stats.html
 https://datascience.stackexchange.com/questions/86049/how-plot-gridsearch-results
 https://datascience.stackexchange.com/questions/64441/how-to-interpret-classification-report-of-scikit-learn
-for ROC the auc of the random model is 0.5.
 for PR curve the auc of the random model is n_positive/(n_positive+n_negative).
-Area under ROC curve is very useful metric to validate classification model because it is threshold and scale invariant while accuracy depends on the chosen threshold value and is scale variant
+Area under ROC curve is threshold and scale invariant while accuracy depends on the chosen threshold value and is scale variant
 https://medium.com/nerd-for-tech/accuracy-vs-auc-roc-a8e7a384d153
 Accuracy+AUCROC & F1+AUCPR
 
-\centering
-\includegraphics[scale=0.8]{Fig2.png}
-\end{frame}
 1) istogramma cv, 2) acroc cv, 3) var importance 4) classification report rf lasr
-
-rifare model comparison
-inserire classification report in final RF
-inserire note corrette

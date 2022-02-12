@@ -12,7 +12,7 @@ import pickle
 
 
 # A) load dataset & define variables
-tweets_df = pd.read_csv(r'C:\Users\loren\Documents\GitHub\intro2ml_2021_final_project\Data\full_sample_processed.csv', encoding = 'utf-8')
+tweets_df = pd.read_csv('intro2ml_2021_final_project\\Data\\2k_sample_processed.csv', encoding = 'utf-8')
 tweets_df['weekday'] = tweets_df['weekday'].astype('category')
 tweets_df['hour'] = tweets_df['hour'].astype('category')
 tweets_df['quote_url'] = tweets_df['quote_url'].astype('category')
@@ -101,10 +101,10 @@ feature_importance = pd.Series(RF.feature_importances_, index = labels).sort_val
 print(feature_importance)
 
 # plot
-sns.barplot(x = feature_importance, y = feature_importance.index)
-plt.xlabel('Feature Importance Score')
+sns.barplot(x = feature_importance[:10], y = feature_importance.index[:10])
+plt.xlabel('Feature Importance Score (%)')
 plt.ylabel('Features')
-plt.title('RF: Importance of Features')
+plt.title('RF: Top 10 Important Features', fontweight='bold', fontsize=15)
 plt.legend()
 plt.show()
 

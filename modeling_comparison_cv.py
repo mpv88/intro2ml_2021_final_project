@@ -51,12 +51,12 @@ X_test = pd.DataFrame(preprocessor.fit_transform(X_test))
 # D) define models
 models = {}
 
-models['Logistic Regression'] = LogisticRegression() # Logistic Regression
-models['Support Vector Machines'] = LinearSVC() # Support Vector Machines
-models['Decision Trees'] = DecisionTreeClassifier() # Decision Trees
-models['Random Forest'] = RandomForestClassifier() # Random Forest
-models['Naive Bayes'] = GaussianNB() # Naive Bayes
-models['K-Nearest Neighbor'] = KNeighborsClassifier() # K-Nearest Neighbors
+models['LR'] = LogisticRegression() # Logistic Regression
+models['SVM'] = LinearSVC() # Support Vector Machines
+models['DT'] = DecisionTreeClassifier() # Decision Trees
+models['RF'] = RandomForestClassifier() # Random Forest
+models['NB'] = GaussianNB() # Naive Bayes
+models['kNN'] = KNeighborsClassifier() # K-Nearest Neighbors
 
 
 # E)  fit/predict models & collect metrcs
@@ -90,7 +90,7 @@ df_model['Mean F1 Score'] = f1.values()
 print(df_model)
 
 # 2. plot metrics comparison
-ax = df_model.plot.bar(rot=0)
+ax = df_model.plot.bar(rot=0, fontsize=16)
 ax.legend(ncol = len(models.keys()), loc=8, bbox_to_anchor=(0.25, -0.13, 0.5, 0.5), prop={'size': 12})
 ax.set_ylim(0.5, 0.8)
 plt.title('Performance metrics comparison for 5-fold CV', fontweight='bold', fontsize=15)
